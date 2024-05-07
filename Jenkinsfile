@@ -36,7 +36,7 @@ pipeline {
                         sh 'pwd'
 
                         sh """
-                        scp -o StrictHostKeyChecking=no -i \$SSH_KEY_FILE ${WORKSPACE}/servers \${SSH_USER}@\${NAGIOS_SERVER}:\${REMOTE_PATH}
+                        scp -o StrictHostKeyChecking=no -i \$SSH_KEY_FILE ${WORKSPACE}/servers/*.cfg \${SSH_USER}@\${NAGIOS_SERVER}:\${REMOTE_PATH}
                         """
 
                         sh """
