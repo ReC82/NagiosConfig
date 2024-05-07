@@ -7,7 +7,7 @@ pipeline {
         // SERVER CONFIG
         NAGIOS_SERVER = "10.1.6.4"
         NAGIOS_CREDENTIALS = 'Nagios'
-        REMOTE_PATH = '/usr/local/nagios/etc/servers/'
+        REMOTE_PATH = '/usr/local/nagios/etc/servers'
         // EMAIL CONFIG
         RECIPIENTS = 'lody.devops@gmail.com'
         SENDER_EMAIL = 'jenkins@lodywood.be'
