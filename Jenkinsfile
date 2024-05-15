@@ -6,7 +6,7 @@ pipeline {
     environment {
         // SERVER CONFIG
         NAGIOS_SERVER = "10.1.6.4"
-        NAGIOS_CREDENTIALS = 'Nagios'
+        NAGIOS_CREDENTIALS = 'monitoring.pem'
         REMOTE_PATH = '/usr/local/nagios/etc/servers'
         // EMAIL CONFIG
         RECIPIENTS = 'lody.devops@gmail.com'
