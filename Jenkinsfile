@@ -40,12 +40,17 @@ pipeline {
 
                         sh """
                         ssh -o StrictHostKeyChecking=no -i \$SSH_KEY_FILE \${SSH_USER}@\${NAGIOS_SERVER} \\
-                            "rm -rf \${REMOTE_PATH}/*.cfg" > ${copyLogFile} 2>&1
+                            "sudo rm -rf \${REMOTE_PATH}/*.cfg" > ${copyLogFile} 2>&1
                         """                        
 
                         sh """
-                        scp -o StrictHostKeyChecking=no -i \$SSH_KEY_FILE ${WORKSPACE}/servers/*.cfg \${SSH_USER}@\${NAGIOS_SERVER}:\${REMOTE_PATH} > ${copyLogFile} 2>&1
+                        scp -o StrictHostKeyChecking=no -i \$SSH_KEY_FILE ${WORKSPACE}/servers/*.cfg \${SSH_USER}@\${NAGIOS_SERVER}:/tmp > ${copyLogFile} 2>&1
                         """
+
+                        sh """
+                        ssh -o StrictHostKeyChecking=no -i \$SSH_KEY_FILE \${SSH_USER}@\${NAGIOS_SERVER} \\
+                            "sudo mv /tmp/*.cfg \${REMOTE_PATH}" > ${copyLogFile} 2>&1
+                        """                     
 
                         sh """
                         ssh -o StrictHostKeyChecking=no -i \$SSH_KEY_FILE \${SSH_USER}@\${NAGIOS_SERVER} \\
