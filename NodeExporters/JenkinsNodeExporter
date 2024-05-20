@@ -1,0 +1,56 @@
+pipeline {
+    agent {
+        label "main"
+    }
+
+    environment {
+        // SERVER CONFIG
+        NAGIOS_SERVER = "10.1.6.4"
+        NAGIOS_CREDENTIALS = 'monitoring.pem'
+        REMOTE_PATH = '/usr/local/nagios/etc/servers'
+        // EMAIL CONFIG
+        RECIPIENTS = 'lody.devops@gmail.com'
+        SENDER_EMAIL = 'jenkins@lodywood.be'
+        // GIT CONFIG
+        ARTIFACT_REPO = 'git@github.com:ReC82/NagiosConfig.git'
+        GIT_CREDENTIALS = 'GitJenkins'
+        TARGET_BRANCH = 'main'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Run Ansible Playbook') {
+            steps {
+                // Run the Ansible playbook
+                ansiblePlaybook(
+                    playbook: 'NodeExporters/Ansible/main.yaml',
+                    inventory: 'NodeExporters/Ansible/inventory.hosts' // Specify the path to your inventory file
+                )
+            }
+        }
+    }
+    post {
+        success {
+            echo 'Ansible playbook executed successfully!'
+        }        
+        failure {
+            emailext(
+                subject: "NodeExporter Installation Failed",
+                body: """
+Build Result: ${currentBuild.result}
+Build Number: ${currentBuild.number}
+Build URL: ${env.BUILD_URL}
+You can download the build report [here](${env.BUILD_URL}artifact/build-report.txt).
+""",
+                to: env.RECIPIENTS,
+                from: env.SENDER_EMAIL,
+                attachLog: true
+            )
+        }
+    }
+}
